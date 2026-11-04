@@ -5,8 +5,10 @@ from PyInstaller.utils.hooks import collect_all, collect_data_files, copy_metada
 
 build_root = Path(SPECPATH)
 osam_data, osam_binaries, osam_imports = collect_all("osam")
-datas = collect_data_files("labelme") + copy_metadata("labelme") + osam_data
-datas += copy_metadata("osam")
+# imgviz 2 uses importlib.metadata.version() at import time. Include metadata
+# for the complete runtime dependency graph, plus imgviz's fonts and images.
+datas = collect_data_files("labelme") + collect_data_files("imgviz")
+datas += copy_metadata("labelme", recursive=True) + osam_data
 
 a = Analysis(
     [str(build_root / "portable_entry.py")],
