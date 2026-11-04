@@ -1,0 +1,95 @@
+name: Publish tested Labelme 7.9.1 Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/labelme-7.9.1-windows']
+    paths: ['.github/workflows/publish-labelme-release.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-labelme-7.9.1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BUILD_RUN: '41847702153'
+      ARTIFACT_ID: '13332291456'
+      SOURCE_COMMIT: d179c2353dcf35a29809797b2702dba8d794b84e
+    steps:
+      - name: Retrieve the successful Windows build
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" > build-run.json
+          gh api "repos/$GH_REPO/actions/artifacts/$ARTIFACT_ID/zip" > release/Labelme-7.9.1-Windows-x64.zip
+      - name: Verify the exact tested binary and prepare release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          run = json.loads(Path('build-run.json').read_text())
+          assert run['conclusion'] == 'success', run['conclusion']
+          assert run['head_sha'] == 'c3e529e8ecbc2889e92ec1aeaaf20c01e0efb5e1'
+          bundle = Path('release/Labelme-7.9.1-Windows-x64.zip')
+          bundle_hash = hashlib.file_digest(bundle.open('rb'), 'sha256').hexdigest()
+          assert bundle_hash == '595059790de0d63f4c47663396c3a555a86a421fa890cc88700b4c541f9647a4'
+          exe_name = 'Labelme-7.9.1-Windows-x64.exe'
+          with ZipFile(bundle) as archive:
+              assert archive.testzip() is None
+              report = json.loads(archive.read('smoke-test.json').decode('utf-8-sig'))
+              assert report['ok'] and report['version'] == '7.9.1', report
+              archive.extract(exe_name, 'release')
+          exe = Path('release') / exe_name
+          exe_hash = hashlib.file_digest(exe.open('rb'), 'sha256').hexdigest()
+          assert exe_hash == 'd9a8c897a25f164f98ff5e9cad257a83bb65ae43bfc717c1f1cb0650e9761283'
+          Path('release/SHA256SUMS.txt').write_text(
+              f'{exe_hash}  {exe.name}\n{bundle_hash}  {bundle.name}\n', encoding='ascii'
+          )
+          Path('release-notes.md').write_text('''Labelme 7.9.1 Windows x64 独立版，由本仓库打包。
+
+          - 下载 `.exe` 可直接运行，无需安装 Python；`.zip` 另外包含使用说明、许可证、依赖清单和测试报告。
+          - 已在 Windows 构建机通过依赖加载、中文翻译、窗口启动、PNG 图片读取、多边形标注保存和 JSON 重开测试。
+          - 人工标注不需要下载模型；AI 辅助模型首次使用仍需联网下载权重。
+          - 启动日志：`%LOCALAPPDATA%\\labelme\\labelme.log` 和 `portable-startup.log`。
+
+          [成功构建与测试](https://github.com/lovmlov/labelme/actions/runs/41847702153)
+
+          应用源码固定为 [wkentaro/labelme v7.9.1](https://github.com/wkentaro/labelme/tree/d179c2353dcf35a29809797b2702dba8d794b84e)。
+          [打包入口与构建源码](https://github.com/lovmlov/labelme/tree/c3e529e8ecbc2889e92ec1aeaaf20c01e0efb5e1/buildkit)。
+          ''', encoding='utf-8')
+          print('Verified the original ZIP, the tested EXE, and the Windows test report.')
+          PY
+      - name: Publish v7.9.1 and upload the verified assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v7.9.1 >/dev/null 2>&1; then
+            echo 'Release v7.9.1 already exists; assets will not be overwritten.'
+            exit 1
+          fi
+          if tag_sha=$(gh api "repos/$GH_REPO/git/ref/tags/v7.9.1" --jq '.object.sha' 2>/dev/null); then
+            test "$tag_sha" = "$SOURCE_COMMIT"
+          fi
+          gh release create v7.9.1 \
+            --target "$SOURCE_COMMIT" \
+            --title 'Labelme 7.9.1 Windows x64' \
+            --notes-file release-notes.md \
+            release/Labelme-7.9.1-Windows-x64.exe \
+            release/Labelme-7.9.1-Windows-x64.zip \
+            release/SHA256SUMS.txt
+          gh release view v7.9.1 --json url,tagName,assets
