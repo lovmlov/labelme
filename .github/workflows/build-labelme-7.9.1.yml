@@ -1,0 +1,56 @@
+name: Build Labelme 7.9.1 Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/labelme-7.9.1-windows']
+    paths:
+      - 'buildkit/**'
+      - '.github/workflows/build-labelme-7.9.1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows-exe:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - name: Check out build files
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check out exact upstream source
+        uses: actions/checkout@v4
+        with:
+          repository: wkentaro/labelme
+          ref: d179c2353dcf35a29809797b2702dba8d794b84e
+          path: labelme-src
+          persist-credentials: false
+      - name: Set up Windows Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Build and test standalone EXE
+        shell: pwsh
+        run: ./buildkit/build-windows.ps1
+      - name: Upload tested EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: Labelme-7.9.1-Windows-x64
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Labelme-7.9.1-build-failure
+          path: |
+            build/**/warn-*.txt
+            build/**/xref-*.html
+            dist/smoke-test.json
+            ~/AppData/Local/labelme/*.log
+          if-no-files-found: ignore
+          retention-days: 7

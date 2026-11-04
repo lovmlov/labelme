@@ -1,0 +1,24 @@
+Labelme 7.9.1 Windows x64 独立程序
+
+本说明随成功构建的 EXE 一起分发；构建脚本本身不是 EXE。
+
+运行：双击 Labelme-7.9.1-Windows-x64.exe，无需另外安装 Python。
+目标：Windows 10 / 11，64 位。没有在 Windows 7 或 32 位系统上验证。
+首次启动时单文件程序需要解压内置依赖到临时目录，请稍候。
+普通人工标注不需要下载 AI 模型；AI 辅助功能首次使用相应模型时仍需联网下载权重。
+
+日志：
+%LOCALAPPDATA%\labelme\labelme.log
+%LOCALAPPDATA%\labelme\portable-startup.log
+
+旧版数据：先用复制的图片和 JSON 测试新版读写，再用于正式数据。
+
+来源：wkentaro/labelme 的 v7.9.1
+源码提交：d179c2353dcf35a29809797b2702dba8d794b84e
+https://github.com/wkentaro/labelme/tree/d179c2353dcf35a29809797b2702dba8d794b84e
+未修改应用程序源码，仅添加单文件打包入口、启动异常日志与构建自检。
+源码和许可证见上述链接及随附 LICENSE-GPL-3.0.txt。
+
+验证范围：构建流程会运行生成的 EXE，检查版本、依赖加载、中文翻译、GUI 窗口、
+PNG 图片读取、多边形标注保存和 JSON 重新打开。不会下载或验证 AI 模型推理。
+这不是官方发布或官方签名的 Windows 程序。

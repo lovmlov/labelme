@@ -1,0 +1,37 @@
+# Build with Windows Python and PyInstaller; no application source patches.
+from pathlib import Path
+
+from PyInstaller.utils.hooks import collect_all, collect_data_files, copy_metadata
+
+build_root = Path(SPECPATH)
+osam_data, osam_binaries, osam_imports = collect_all("osam")
+datas = collect_data_files("labelme") + copy_metadata("labelme") + osam_data
+datas += copy_metadata("osam")
+
+a = Analysis(
+    [str(build_root / "portable_entry.py")],
+    pathex=[str(build_root)],
+    binaries=osam_binaries,
+    datas=datas,
+    hiddenimports=osam_imports + ["portable_smoke"],
+    hookspath=[],
+    hooksconfig={"matplotlib": {"backends": ["Agg"]}},
+    runtime_hooks=[],
+    excludes=["PyQt5", "PyQt6", "PySide2", "tkinter", "IPython", "pytest"],
+    noarchive=False,
+)
+pyz = PYZ(a.pure)
+exe = EXE(
+    pyz,
+    a.scripts,
+    a.binaries,
+    a.datas,
+    [],
+    name="Labelme-7.9.1-Windows-x64",
+    debug=False,
+    strip=False,
+    upx=False,
+    console=False,
+    disable_windowed_traceback=False,
+    icon=str(build_root.parent / "labelme-src" / "labelme" / "icons" / "icon.ico"),
+)
