@@ -7,8 +7,18 @@ $TaskRoot = Split-Path -Parent $BuildRoot
 # installed, pinned v7.9.1 distribution must enter the frozen application.
 Set-Location $BuildRoot
 
+# Hosted runners also contain unrelated Python tools (for example pipx).
+# Build in a dedicated environment so their requirements cannot enter this
+# application's dependency checks or PyInstaller analysis.
+$BuildVenv = Join-Path $TaskRoot '.labelme-build-venv'
+$BuildPython = Join-Path $BuildVenv 'Scripts\python.exe'
+if (-not (Test-Path $BuildPython)) {
+    & python -m venv $BuildVenv
+    if ($LASTEXITCODE -ne 0) { throw 'Could not create the build virtual environment.' }
+}
+
 function Invoke-Python {
-    & python @args
+    & $BuildPython @args
     if ($LASTEXITCODE -ne 0) { throw "Python command failed: $args" }
 }
 
