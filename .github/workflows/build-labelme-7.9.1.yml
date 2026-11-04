@@ -17,18 +17,18 @@ jobs:
     timeout-minutes: 40
     steps:
       - name: Check out build files
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
       - name: Check out exact upstream source
-        uses: actions/checkout@v4
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           repository: wkentaro/labelme
           ref: d179c2353dcf35a29809797b2702dba8d794b84e
           path: labelme-src
           persist-credentials: false
       - name: Set up Windows Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
           architecture: x64
@@ -36,21 +36,37 @@ jobs:
         shell: pwsh
         run: ./buildkit/build-windows.ps1
       - name: Upload tested EXE
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: Labelme-7.9.1-Windows-x64
           path: dist/*
           if-no-files-found: error
           retention-days: 14
+      - name: Collect and print failure diagnostics
+        if: failure()
+        shell: pwsh
+        run: |
+          $Target = Join-Path $env:GITHUB_WORKSPACE 'diagnostics'
+          New-Item -ItemType Directory -Force -Path $Target | Out-Null
+          $LogDir = Join-Path $env:LOCALAPPDATA 'labelme'
+          if (Test-Path $LogDir) {
+            Get-ChildItem -Path $LogDir -Filter '*.log' -File |
+              Copy-Item -Destination $Target
+          }
+          $Reports = @(Get-ChildItem -Path "$Target\*.log", 'dist/smoke-test.json' -File -ErrorAction SilentlyContinue)
+          foreach ($ReportFile in $Reports) {
+            Write-Host $ReportFile.Name
+            Get-Content -Encoding UTF8 -Tail 120 $ReportFile.FullName
+          }
       - name: Upload failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: Labelme-7.9.1-build-failure
           path: |
             build/**/warn-*.txt
             build/**/xref-*.html
             dist/smoke-test.json
-            ~/AppData/Local/labelme/*.log
+            diagnostics/**
           if-no-files-found: ignore
           retention-days: 7
