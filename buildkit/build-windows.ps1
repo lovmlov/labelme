@@ -31,16 +31,20 @@ if (-not $SkipInstall) {
     Invoke-Python -m pip install --require-hashes --only-binary=:all: -r "$BuildRoot\requirements-win.lock"
     Invoke-Python -m pip install -r "$BuildRoot\build-requirements.txt"
     # Set the wheel version even if a CI checkout contains only the pinned commit.
-    $env:SETUPTOOLS_SCM_PRETEND_VERSION = '7.9.1+edgeclick.1'
+    $env:SETUPTOOLS_SCM_PRETEND_VERSION = '7.9.1+layout.1'
     Invoke-Python -m pip install --no-deps $TaskRoot
     Invoke-Python -m pip install pytest==9.0.3 pytest-qt==4.5.0
 }
 Invoke-Python -m pip check
-Invoke-Python -c 'import labelme; assert labelme.__version__ == "7.9.1+edgeclick.1", labelme.__version__'
+Invoke-Python -c 'import labelme; assert labelme.__version__ == "7.9.1+layout.1", labelme.__version__'
 New-Item -ItemType Directory -Force -Path "$TaskRoot\dist" | Out-Null
 $env:QT_QPA_PLATFORM = 'offscreen'
 try {
     Invoke-Python -m pytest -q `
+        "$TaskRoot\tests\e2e\tool_bar_layout_test.py" `
+        "$TaskRoot\tests\e2e\window_geometry_persistence_test.py" `
+        "$TaskRoot\tests\unit\widgets\_tool_bar_test.py" `
+        "$TaskRoot\tests\unit\widgets\tool_bar_drag_test.py" `
         "$TaskRoot\tests\e2e\edge_click_test.py" `
         "$TaskRoot\tests\e2e\canvas_interaction_test.py" `
         "$TaskRoot\tests\e2e\settings_test.py" `
@@ -52,7 +56,7 @@ try {
     Remove-Item Env:QT_QPA_PLATFORM -ErrorAction SilentlyContinue
 }
 Invoke-Python -m PyInstaller --clean --noconfirm --distpath "$TaskRoot\dist" --workpath "$TaskRoot\build" "$BuildRoot\labelme_portable.spec"
-$Exe = "$TaskRoot\dist\Labelme-7.9.1-edgeclick.1-Windows-x64.exe"
+$Exe = "$TaskRoot\dist\Labelme-7.9.1-layout.1-Windows-x64.exe"
 if (-not (Test-Path $Exe)) { throw 'PyInstaller did not create the EXE.' }
 
 # Run the actual frozen EXE, including its Qt and ONNX native libraries.
@@ -74,7 +78,7 @@ if (-not $Result.ok) { throw "Frozen application smoke test failed: $($Result.er
 
 Copy-Item "$TaskRoot\LICENSE" "$TaskRoot\dist\LICENSE-GPL-3.0.txt"
 Copy-Item "$BuildRoot\使用说明.txt" "$TaskRoot\dist\使用说明.txt"
-Copy-Item "$BuildRoot\edgeclick-release-notes.md" "$TaskRoot\dist\改动说明.md"
+Copy-Item "$BuildRoot\layout-release-notes.md" "$TaskRoot\dist\改动说明.md"
 $ActualCommit | Out-File -Encoding ascii "$TaskRoot\dist\source-commit.txt"
 Invoke-Python -m pip freeze --all | Out-File -Encoding UTF8 "$TaskRoot\dist\dependencies.txt"
 $Digest = (Get-FileHash -Algorithm SHA256 $Exe).Hash.ToLowerInvariant()

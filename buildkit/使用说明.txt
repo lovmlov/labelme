@@ -1,6 +1,6 @@
-Labelme 7.9.1+edgeclick.1 Windows x64 独立程序
+Labelme 7.9.1+layout.1 Windows x64 独立程序
 
-运行：双击 Labelme-7.9.1-edgeclick.1-Windows-x64.exe，无需安装 Python。
+运行：双击 Labelme-7.9.1-layout.1-Windows-x64.exe，无需安装 Python。
 目标：Windows 10 / 11，64 位。首次启动需要解压内置依赖到临时目录，请稍候。
 人工标注无需下载 AI 模型；AI 辅助功能首次使用相应模型时仍需下载权重。
 
@@ -17,7 +17,14 @@ Labelme 7.9.1+edgeclick.1 Windows x64 独立程序
 %LOCALAPPDATA%\labelme\portable-startup.log
 
 源码：基于 wkentaro/labelme v7.9.1 修改，增加边缘单击加点及可持久化的设置开关。
-https://github.com/lovmlov/labelme/tree/codex/labelme-7.9.1-edgeclick
+https://github.com/lovmlov/labelme/tree/codex/labelme-7.9.1-layout
 本包的精确源码提交号见 source-commit.txt；GPL-3.0 许可证见 LICENSE-GPL-3.0.txt。
 详细改动见 改动说明.md。回归结果见 windows-tests.xml，EXE 自检见 smoke-test.json。
 这不是官方发布或官方签名的 Windows 程序。
+
+工具栏与按钮布局：
+按住工具栏边缘的手柄，可拖到窗口四边或浮动。
+直接按住操作按钮拖动，可在本栏排序，也可移到另一条工具栏；单击仍执行原操作。
+文件/编辑/视图/帮助菜单栏固定在顶部。
+布局随程序关闭保存，重新启动后恢复。
+视图 -> 重置布局：恢复默认工具栏位置和按钮顺序。

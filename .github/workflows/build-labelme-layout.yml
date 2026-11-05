@@ -1,0 +1,108 @@
+---
+name: Build and release Labelme 7.9.1 draggable-layout Windows EXE
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/labelme-7.9.1-layout]
+    paths:
+      - labelme/**
+      - tests/**
+      - buildkit/**
+      - changelog.d/**
+      - .github/workflows/build-labelme-layout.yml
+permissions:
+  contents: read
+concurrency:
+  group: labelme-7.9.1-layout-release
+  cancel-in-progress: true
+jobs:
+  windows-exe:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - name: Check out modified source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803  # v6
+        with:
+          persist-credentials: false
+      - name: Set up Windows Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Test source, build, and test the standalone EXE
+        shell: pwsh
+        run: ./buildkit/build-windows.ps1
+      - name: Upload verified release files
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6
+        with:
+          name: Labelme-7.9.1-layout.1-Windows-x64
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Collect failure diagnostics
+        if: failure()
+        shell: pwsh
+        run: |
+          $Target = Join-Path $env:GITHUB_WORKSPACE 'diagnostics'
+          New-Item -ItemType Directory -Force -Path $Target | Out-Null
+          $LogDir = Join-Path $env:LOCALAPPDATA 'labelme'
+          if (Test-Path $LogDir) {
+            Get-ChildItem -Path $LogDir -Filter '*.log' -File |
+              Copy-Item -Destination $Target
+          }
+          Get-ChildItem -Path "$Target\*.log", 'dist/smoke-test.json' -File -ErrorAction SilentlyContinue |
+            ForEach-Object { Get-Content -Encoding UTF8 -Tail 120 $_.FullName }
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6
+        with:
+          name: Labelme-layout-build-failure
+          path: |
+            build/**/warn-*.txt
+            dist/*.json
+            dist/*.xml
+            diagnostics/**
+          if-no-files-found: ignore
+          retention-days: 7
+  publish:
+    needs: windows-exe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Check out release notes from the tested commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803  # v6
+        with:
+          persist-credentials: false
+      - name: Download this run's tested executable
+        run: gh run download "$GITHUB_RUN_ID" --name Labelme-7.9.1-layout.1-Windows-x64
+          --dir dist
+      - name: Validate test reports and create the release bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 buildkit/prepare-layout-release.py
+      - name: Publish the new release
+        shell: bash
+        run: |-
+          set -euo pipefail
+          latest_sha=$(gh api "repos/$GH_REPO/branches/codex%2Flabelme-7.9.1-layout" --jq '.commit.sha')
+          test "$latest_sha" = "$GITHUB_SHA"
+          tag=v7.9.1-layout.1
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; refusing to overwrite its assets."
+            exit 1
+          fi
+          gh release create "$tag" \
+            --target "$GITHUB_SHA" \
+            --title 'Labelme 7.9.1 Windows x64 — 工具栏拖动布局版' \
+            --notes-file release-notes.md \
+            release/Labelme-7.9.1-layout.1-Windows-x64.exe \
+            release/Labelme-7.9.1-layout.1-Windows-x64.zip \
+            release/SHA256SUMS.txt
+          gh release view "$tag" --json url,tagName,assets
