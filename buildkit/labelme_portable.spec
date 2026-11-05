@@ -1,4 +1,4 @@
-# Build with Windows Python and PyInstaller; no application source patches.
+# Build the modified checkout with Windows Python and PyInstaller.
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_all, collect_data_files, copy_metadata
@@ -29,11 +29,11 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="Labelme-7.9.1-Windows-x64",
+    name="Labelme-7.9.1-edgeclick.1-Windows-x64",
     debug=False,
     strip=False,
     upx=False,
     console=False,
     disable_windowed_traceback=False,
-    icon=str(build_root.parent / "labelme-src" / "labelme" / "icons" / "icon.ico"),
+    icon=str(build_root.parent / "labelme" / "icons" / "icon.ico"),
 )
