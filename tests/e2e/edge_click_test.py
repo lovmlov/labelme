@@ -37,12 +37,15 @@ def _insert_shape(*, win: MainWindow, shape_type: ShapeType = "polygon") -> Shap
     shape = Shape(
         label="edge_click_test",
         shape_type=shape_type,
-        points=[
-            (width * 0.2, height * 0.2),
-            (width * 0.8, height * 0.2),
-            (width * 0.8, height * 0.8),
-            (width * 0.2, height * 0.8),
-        ],
+        points=np.array(
+            [
+                (width * 0.2, height * 0.2),
+                (width * 0.8, height * 0.2),
+                (width * 0.8, height * 0.8),
+                (width * 0.2, height * 0.8),
+            ],
+            dtype=np.float64,
+        ),
         closed=shape_type == "polygon",
     )
     win._insert_shapes([shape])

@@ -1,19 +1,16 @@
+---
 name: Publish tested Labelme 7.9.1 Windows release
-
 on:
   workflow_dispatch:
   push:
-    branches: ['codex/labelme-7.9.1-windows']
-    paths: ['.github/workflows/publish-labelme-release.yml']
-
+    branches: [codex/labelme-7.9.1-windows]
+    paths: [.github/workflows/publish-labelme-release.yml]
 permissions:
   actions: read
   contents: write
-
 concurrency:
   group: publish-labelme-7.9.1
   cancel-in-progress: false
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -41,7 +38,6 @@ jobs:
           import json
           from pathlib import Path
           from zipfile import ZipFile
-
           run = json.loads(Path('build-run.json').read_text())
           assert run['conclusion'] == 'success', run['conclusion']
           assert run['head_sha'] == 'c3e529e8ecbc2889e92ec1aeaaf20c01e0efb5e1'
@@ -61,14 +57,11 @@ jobs:
               f'{exe_hash}  {exe.name}\n{bundle_hash}  {bundle.name}\n', encoding='ascii'
           )
           Path('release-notes.md').write_text('''Labelme 7.9.1 Windows x64 独立版，由本仓库打包。
-
           - 下载 `.exe` 可直接运行，无需安装 Python；`.zip` 另外包含使用说明、许可证、依赖清单和测试报告。
           - 已在 Windows 构建机通过依赖加载、中文翻译、窗口启动、PNG 图片读取、多边形标注保存和 JSON 重开测试。
           - 人工标注不需要下载模型；AI 辅助模型首次使用仍需联网下载权重。
           - 启动日志：`%LOCALAPPDATA%\\labelme\\labelme.log` 和 `portable-startup.log`。
-
           [成功构建与测试](https://github.com/lovmlov/labelme/actions/runs/41847702153)
-
           应用源码固定为 [wkentaro/labelme v7.9.1](https://github.com/wkentaro/labelme/tree/d179c2353dcf35a29809797b2702dba8d794b84e)。
           [打包入口与构建源码](https://github.com/lovmlov/labelme/tree/c3e529e8ecbc2889e92ec1aeaaf20c01e0efb5e1/buildkit)。
           ''', encoding='utf-8')
@@ -76,7 +69,7 @@ jobs:
           PY
       - name: Publish v7.9.1 and upload the verified assets
         shell: bash
-        run: |
+        run: |-
           set -euo pipefail
           if gh release view v7.9.1 >/dev/null 2>&1; then
             echo 'Release v7.9.1 already exists; assets will not be overwritten.'

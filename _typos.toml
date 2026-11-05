@@ -1,2 +1,6 @@
 [files]
 extend-exclude = ["labelme/translate/"]
+
+[default.extend-identifiers]
+# PyInstaller's public Analysis/EXE API uses this spelling.
+datas = "datas"

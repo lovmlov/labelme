@@ -15,6 +15,7 @@ def run_smoke(report: Path, /) -> int:
     app = None
     win = None
     try:
+        import numpy as np
         import onnxruntime
         import osam
         from PIL import Image
@@ -63,7 +64,7 @@ def run_smoke(report: Path, /) -> int:
             shape = Shape(
                 label="portable_test",
                 shape_type="polygon",
-                points=[[20, 20], [100, 20], [100, 100]],
+                points=np.array([[20, 20], [100, 20], [100, 100]], dtype=np.float64),
                 closed=True,
             )
             original_point_count = len(shape.points)
