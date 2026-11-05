@@ -10,6 +10,7 @@ from PySide6.QtCore import QSize
 from PySide6.QtWidgets import QMessageBox
 from pytestqt.qtbot import QtBot
 
+from labelme._app import TOOLBAR_ACTIONS_KEY
 from labelme._app import WINDOW_LAYOUT_KEY
 from labelme._app import WINDOW_POSITION_KEY
 from labelme._app import WINDOW_SIZE_KEY
@@ -89,6 +90,7 @@ def test_cancelled_close_keeps_persisted_window_state(
     win._window_state.setValue(WINDOW_SIZE_KEY, PERSISTED_SIZE)
     win._window_state.setValue(WINDOW_POSITION_KEY, PERSISTED_POSITION)
     win._window_state.setValue(WINDOW_LAYOUT_KEY, PERSISTED_STATE)
+    win._window_state.setValue(TOOLBAR_ACTIONS_KEY, "previous-button-order")
 
     win.resize(_RESIZE_W, _RESIZE_H)
     win.move(_MOVE_X, _MOVE_Y)
@@ -115,5 +117,6 @@ def test_cancelled_close_keeps_persisted_window_state(
     assert win._window_state.value(WINDOW_SIZE_KEY) == PERSISTED_SIZE
     assert win._window_state.value(WINDOW_POSITION_KEY) == PERSISTED_POSITION
     assert win._window_state.value(WINDOW_LAYOUT_KEY) == PERSISTED_STATE
+    assert win._window_state.value(TOOLBAR_ACTIONS_KEY) == "previous-button-order"
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
