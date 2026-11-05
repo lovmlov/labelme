@@ -160,6 +160,10 @@
         <translation>Нажмите и перетащите, чтобы переместить точку</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Щёлкните, чтобы добавить точку на ребре</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Удерживайте %s и щёлкните, чтобы добавить точку на ребре</translation>
     </message>
@@ -1369,6 +1373,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Заполнять многоугольник при рисовании</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Добавлять точки на рёбрах без Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>В режиме редактирования щёлкните по ребру многоугольника или ломаной, чтобы добавить точку. Alt+щелчок также работает.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

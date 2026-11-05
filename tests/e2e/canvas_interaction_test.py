@@ -719,10 +719,21 @@ def test_select_nonpolygon_shape(
     click_widget = image_to_widget_pos(canvas=canvas, image_pos=click_pos)
     qtbot.mouseMove(canvas, pos=click_widget)
     qtbot.wait(50)
-    qtbot.mouseClick(canvas, Qt.MouseButton.LeftButton, pos=click_widget)
+    # A line strip has no interior: use Ctrl to select its edge without adding
+    # a vertex now that an unmodified edge click inserts one by default.
+    selection_modifier = (
+        Qt.KeyboardModifier.ControlModifier
+        if create_mode == "linestrip"
+        else Qt.KeyboardModifier.NoModifier
+    )
+    point_count = len(shape.points)
+    qtbot.mouseClick(
+        canvas, Qt.MouseButton.LeftButton, selection_modifier, pos=click_widget
+    )
     qtbot.wait(50)
 
     assert shape in canvas.selected_shapes
+    assert len(shape.points) == point_count
 
     _save_and_check(win=raw_win, tmp_path=tmp_path)
     close_or_pause(qtbot=qtbot, widget=raw_win, pause=pause)

@@ -160,6 +160,10 @@
         <translation>클릭하고 드래그하여 점 이동</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>클릭하여 가장자리에 점 추가</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>%s 키를 누른 채 클릭하여 변에 점 추가</translation>
     </message>
@@ -1369,6 +1373,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>그리는 동안 다각형 채우기</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Alt 없이 가장자리에 점 추가</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>편집 모드에서 다각형이나 연결선의 가장자리를 클릭하여 점을 추가합니다. Alt+클릭도 사용할 수 있습니다.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

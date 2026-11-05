@@ -1302,6 +1302,9 @@ class MainWindow(QtWidgets.QMainWindow):
             epsilon=self._config["epsilon"],
             double_click=self._config["canvas"]["double_click"],
             num_backups=self._config["canvas"]["num_backups"],
+            add_point_on_edge_without_alt=self._config["canvas"][
+                "add_point_on_edge_without_alt"
+            ],
             crosshair=self._config["canvas"]["crosshair"],
             allow_out_of_bounds_points=self._config["canvas"][
                 "allow_out_of_bounds_points"
@@ -3245,6 +3248,10 @@ class MainWindow(QtWidgets.QMainWindow):
             detail = self._config["mask_polygonization"]["detail"]
             self._ai_annotation.set_polygon_detail(detail)
             self._canvas_widgets.canvas.set_ai_polygon_detail(detail=detail)
+        elif key_path == ("canvas", "add_point_on_edge_without_alt"):
+            self._canvas_widgets.canvas.set_add_point_on_edge_without_alt(
+                value=self._config["canvas"]["add_point_on_edge_without_alt"]
+            )
         elif key_path == ("canvas", "allow_out_of_bounds_points"):
             canvas = self._canvas_widgets.canvas
             canvas.set_allow_out_of_bounds_points(

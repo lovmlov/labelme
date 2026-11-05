@@ -72,6 +72,10 @@ def _validate_config_item(*, key_path: tuple[str, ...], value: object) -> None:
     MASK_POLYGONIZATION_DETAIL_MAX: Final = 100
 
     key = key_path[-1]
+    if key_path == ("canvas", "add_point_on_edge_without_alt") and not isinstance(
+        value, bool
+    ):
+        raise ValueError("canvas.add_point_on_edge_without_alt must be true or false")
     if key_path == ("label_flags",) and value is not None:
         if not isinstance(value, dict) or any(
             not isinstance(pattern, str)

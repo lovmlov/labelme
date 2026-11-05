@@ -160,6 +160,10 @@
         <translation>Klik en sleep om punt te verplaatsen</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Klik om een punt op de rand toe te voegen</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Houd %s ingedrukt en klik om een punt op de rand toe te voegen</translation>
     </message>
@@ -1369,6 +1373,14 @@ Verwachte locatie: {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Polygoon vullen tijdens tekenen</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Punten op randen toevoegen zonder Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Klik in de bewerkingsmodus op een rand van een veelhoek of een polylijn om een punt toe te voegen. Alt+klik werkt ook.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

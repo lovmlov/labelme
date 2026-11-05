@@ -156,6 +156,10 @@
 <context>
     <name>Canvas</name>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>单击以在边缘新增点</translation>
+    </message>
+    <message>
         <source>Click &amp; drag to move point</source>
         <translation>点击 &amp; 拖动以移动点</translation>
     </message>
@@ -1254,6 +1258,14 @@ Expected location: {path}</source>
 </context>
 <context>
     <name>SettingsDialog</name>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>在编辑模式下，单击多边形或折线边缘即可新增点，也支持 Alt+单击。</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>单击边缘新增点（无需 Alt）</translation>
+    </message>
     <message>
         <source>Color theme</source>
         <translation>颜色主题</translation>

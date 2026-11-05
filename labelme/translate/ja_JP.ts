@@ -160,6 +160,10 @@
         <translation>クリック &amp; ドラッグで頂点を移動</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>クリックして辺に点を追加</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>%s を押しながらクリックで辺に点を追加</translation>
     </message>
@@ -1379,6 +1383,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>描画中にポリゴンを塗りつぶす</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Alt キーなしで辺に点を追加</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>編集モードで多角形または折れ線の辺をクリックすると点を追加できます。Alt キーを押しながらクリックしても追加できます。</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>
