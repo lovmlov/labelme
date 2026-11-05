@@ -19,7 +19,7 @@ jobs:
     env:
       # The fork's Windows release tags are not Python version strings.
       # Match the portable wheel version when fetching the complete tag history.
-      SETUPTOOLS_SCM_PRETEND_VERSION: 7.9.1+layout.1
+      SETUPTOOLS_SCM_PRETEND_VERSION: 7.9.1+layout.2
     steps:
       - uses: actions/checkout@v7
         with:

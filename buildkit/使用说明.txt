@@ -1,6 +1,6 @@
-Labelme 7.9.1+layout.1 Windows x64 独立程序
+Labelme 7.9.1+layout.2 Windows x64 独立程序
 
-运行：双击 Labelme-7.9.1-layout.1-Windows-x64.exe，无需安装 Python。
+运行：双击 Labelme-7.9.1-layout.2-Windows-x64.exe，无需安装 Python。
 目标：Windows 10 / 11，64 位。首次启动需要解压内置依赖到临时目录，请稍候。
 人工标注无需下载 AI 模型；AI 辅助功能首次使用相应模型时仍需下载权重。
 

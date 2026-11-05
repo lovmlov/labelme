@@ -29,7 +29,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="Labelme-7.9.1-layout.1-Windows-x64",
+    name="Labelme-7.9.1-layout.2-Windows-x64",
     debug=False,
     strip=False,
     upx=False,

@@ -12,15 +12,15 @@ from zipfile import ZipFile
 dist = Path("dist")
 release = Path("release")
 release.mkdir(exist_ok=True)
-exe_name = "Labelme-7.9.1-layout.1-Windows-x64.exe"
-bundle_name = "Labelme-7.9.1-layout.1-Windows-x64.zip"
+exe_name = "Labelme-7.9.1-layout.2-Windows-x64.exe"
+bundle_name = "Labelme-7.9.1-layout.2-Windows-x64.zip"
 source_sha = os.environ["GITHUB_SHA"]
 repository = os.environ["GITHUB_REPOSITORY"]
 run_id = os.environ["GITHUB_RUN_ID"]
 assert (dist / "source-commit.txt").read_text().strip() == source_sha
 
 report = json.loads((dist / "smoke-test.json").read_text(encoding="utf-8-sig"))
-assert report["ok"] and report["version"] == "7.9.1+layout.1", report
+assert report["ok"] and report["version"] == "7.9.1+layout.2", report
 assert "plain left click inserts polygon vertex in frozen EXE" in report["checks"]
 assert "undo restores polygon after edge insertion" in report["checks"]
 assert "Alt-only setting and Alt-click compatibility" in report["checks"]

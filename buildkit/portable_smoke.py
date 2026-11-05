@@ -31,7 +31,7 @@ def run_smoke(report: Path, /) -> int:
         from labelme._widgets._tool_bar_layout import restore_toolbar_actions
         from labelme._widgets._tool_bar_layout import save_toolbar_actions
 
-        assert labelme.__version__ == "7.9.1+layout.1", labelme.__version__
+        assert labelme.__version__ == "7.9.1+layout.2", labelme.__version__
         results["version"] = labelme.__version__
         results["onnxruntime"] = onnxruntime.__version__
         results["qt"] = QtCore.qVersion()

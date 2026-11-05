@@ -31,12 +31,12 @@ if (-not $SkipInstall) {
     Invoke-Python -m pip install --require-hashes --only-binary=:all: -r "$BuildRoot\requirements-win.lock"
     Invoke-Python -m pip install -r "$BuildRoot\build-requirements.txt"
     # Set the wheel version even if a CI checkout contains only the pinned commit.
-    $env:SETUPTOOLS_SCM_PRETEND_VERSION = '7.9.1+layout.1'
+    $env:SETUPTOOLS_SCM_PRETEND_VERSION = '7.9.1+layout.2'
     Invoke-Python -m pip install --no-deps $TaskRoot
     Invoke-Python -m pip install pytest==9.0.3 pytest-qt==4.5.0
 }
 Invoke-Python -m pip check
-Invoke-Python -c 'import labelme; assert labelme.__version__ == "7.9.1+layout.1", labelme.__version__'
+Invoke-Python -c 'import labelme; assert labelme.__version__ == "7.9.1+layout.2", labelme.__version__'
 New-Item -ItemType Directory -Force -Path "$TaskRoot\dist" | Out-Null
 $env:QT_QPA_PLATFORM = 'offscreen'
 try {
@@ -56,7 +56,7 @@ try {
     Remove-Item Env:QT_QPA_PLATFORM -ErrorAction SilentlyContinue
 }
 Invoke-Python -m PyInstaller --clean --noconfirm --distpath "$TaskRoot\dist" --workpath "$TaskRoot\build" "$BuildRoot\labelme_portable.spec"
-$Exe = "$TaskRoot\dist\Labelme-7.9.1-layout.1-Windows-x64.exe"
+$Exe = "$TaskRoot\dist\Labelme-7.9.1-layout.2-Windows-x64.exe"
 if (-not (Test-Path $Exe)) { throw 'PyInstaller did not create the EXE.' }
 
 # Run the actual frozen EXE, including its Qt and ONNX native libraries.

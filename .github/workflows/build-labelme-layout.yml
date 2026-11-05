@@ -38,7 +38,7 @@ jobs:
       - name: Upload verified release files
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6
         with:
-          name: Labelme-7.9.1-layout.1-Windows-x64
+          name: Labelme-7.9.1-layout.2-Windows-x64
           path: dist/*
           if-no-files-found: error
           retention-days: 14
@@ -83,7 +83,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Download this run's tested executable
-        run: gh run download "$GITHUB_RUN_ID" --name Labelme-7.9.1-layout.1-Windows-x64
+        run: gh run download "$GITHUB_RUN_ID" --name Labelme-7.9.1-layout.2-Windows-x64
           --dir dist
       - name: Validate test reports and create the release bundle
         shell: bash
@@ -96,7 +96,7 @@ jobs:
           set -euo pipefail
           latest_sha=$(gh api "repos/$GH_REPO/branches/codex%2Flabelme-7.9.1-layout" --jq '.commit.sha')
           test "$latest_sha" = "$GITHUB_SHA"
-          tag=v7.9.1-layout.1
+          tag=v7.9.1-layout.2
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Release $tag already exists; refusing to overwrite its assets."
             exit 1
@@ -105,7 +105,7 @@ jobs:
             --target "$GITHUB_SHA" \
             --title 'Labelme 7.9.1 Windows x64 — 工具栏拖动布局版' \
             --notes-file release-notes.md \
-            release/Labelme-7.9.1-layout.1-Windows-x64.exe \
-            release/Labelme-7.9.1-layout.1-Windows-x64.zip \
+            release/Labelme-7.9.1-layout.2-Windows-x64.exe \
+            release/Labelme-7.9.1-layout.2-Windows-x64.zip \
             release/SHA256SUMS.txt
           gh release view "$tag" --json url,tagName,assets
