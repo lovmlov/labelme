@@ -188,6 +188,10 @@
         <translation>Натисніть початкову точку для лінії</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Клацніть, щоб додати точку на ребрі</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Утримуйте %s і клацніть, щоб додати точку на ребрі</translation>
     </message>
@@ -1369,6 +1373,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Заповнювати багатокутник під час малювання</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Додавати точки на ребрах без Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>У режимі редагування клацніть ребро багатокутника або ламаної, щоб додати точку. Alt+клацання також працює.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

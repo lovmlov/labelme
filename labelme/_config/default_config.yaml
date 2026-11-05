@@ -72,6 +72,8 @@ fit_to_content:
 epsilon: 10.0
 canvas:
   fill_drawing: true
+  # In edit mode, a plain left click on an edge inserts a point. Alt also works.
+  add_point_on_edge_without_alt: true
   # None: do nothing
   # close: close polygon
   double_click: close

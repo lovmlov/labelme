@@ -160,6 +160,10 @@
         <translation>Nhấn và kéo để di chuyển điểm</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Nhấp để thêm điểm trên cạnh</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Giữ %s và nhấp để thêm một điểm trên cạnh</translation>
     </message>
@@ -1369,6 +1373,14 @@ Vị trí dự kiến: {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Tô đa giác khi vẽ</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Thêm điểm trên cạnh mà không cần Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Trong chế độ chỉnh sửa, nhấp vào cạnh của đa giác hoặc đường gấp khúc để thêm điểm. Alt+nhấp cũng hoạt động.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

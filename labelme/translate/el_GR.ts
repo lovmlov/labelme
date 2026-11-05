@@ -188,6 +188,10 @@
         <translation>Κάντε κλικ στο σημείο έναρξης για το linestrip</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Κάντε κλικ για προσθήκη σημείου στην ακμή</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Κρατήστε πατημένο το %s και κάντε κλικ για προσθήκη σημείου στην ακμή</translation>
     </message>
@@ -1369,6 +1373,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Γεμίστε πολύγωνο ενώ σχεδιάζετε</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Προσθήκη σημείων στις ακμές χωρίς Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Στη λειτουργία επεξεργασίας, κάντε κλικ σε ακμή πολυγώνου ή τεθλασμένης για προσθήκη σημείου. Λειτουργεί και το Alt+κλικ.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

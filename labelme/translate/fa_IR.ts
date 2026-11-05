@@ -160,6 +160,10 @@
         <translation>کلیک و کشیدن برای جابجایی نقطه</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>برای افزودن نقطه روی لبه کلیک کنید</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>%s را نگه دارید و کلیک کنید تا نقطه‌ای روی لبه اضافه شود</translation>
     </message>
@@ -1369,6 +1373,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>پر کردن چندضلعی هنگام رسم</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>افزودن نقطه روی لبه‌ها بدون Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>در حالت ویرایش، برای افزودن نقطه روی لبه چندضلعی یا خط شکسته کلیک کنید. Alt+کلیک نیز کار می‌کند.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

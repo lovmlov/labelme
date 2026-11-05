@@ -256,6 +256,9 @@ class Canvas(QtWidgets.QWidget):
                 f"Unexpected value for double_click event: {self._double_click}"
             )
         self._num_backups: int = kwargs.pop("num_backups", 10)
+        self._add_point_on_edge_without_alt: bool = kwargs.pop(
+            "add_point_on_edge_without_alt", True
+        )
         self._allow_out_of_bounds_points: bool = kwargs.pop(
             "allow_out_of_bounds_points", False
         )
@@ -311,6 +314,9 @@ class Canvas(QtWidgets.QWidget):
         self.context_menu_origin = None
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.FocusPolicy.WheelFocus)
+
+    def set_add_point_on_edge_without_alt(self, *, value: bool) -> None:
+        self._add_point_on_edge_without_alt = value
 
     def set_fill_drawing(self, *, value: bool) -> None:
         self._fill_drawing = value
@@ -1023,10 +1029,13 @@ class Canvas(QtWidgets.QWidget):
                 hovered_rotation=None,
             )
             self._apply_cursor(CursorRole.HANDLE)
-            status_messages.append(
-                self.tr("Hold %s and click to add a point on the edge")
-                % _utils.modifier_text(Qt.KeyboardModifier.AltModifier)
-            )
+            if self._add_point_on_edge_without_alt:
+                status_messages.append(self.tr("Click to add a point on the edge"))
+            else:
+                status_messages.append(
+                    self.tr("Hold %s and click to add a point on the edge")
+                    % _utils.modifier_text(Qt.KeyboardModifier.AltModifier)
+                )
             return
 
         if target.kind is HitKind.BODY:
@@ -1265,7 +1274,11 @@ class Canvas(QtWidgets.QWidget):
         # Returns True only when the press is consumed as a terminal edit (a point
         # removal), so the caller skips point selection and starts no drag. Adding
         # a point intentionally falls through so the new vertex can be dragged.
-        if self._is_edge_selected() and modifiers == Qt.KeyboardModifier.AltModifier:
+        add_point_requested = modifiers == Qt.KeyboardModifier.AltModifier or (
+            self._add_point_on_edge_without_alt
+            and modifiers == Qt.KeyboardModifier.NoModifier
+        )
+        if self._is_edge_selected() and add_point_requested:
             self.add_point_to_edge()
             return False
         if self._is_vertex_selected() and modifiers == (

@@ -188,6 +188,10 @@
         <translation>Kattintson a vonallánc kezdőpontjára</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Kattintson az élre egy pont hozzáadásához</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Tartsa lenyomva a(z) %s billentyűt, és kattintson egy pont hozzáadásához az élen</translation>
     </message>
@@ -1369,6 +1373,14 @@ Várt hely: {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Sokszög kitöltése rajzolás közben</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Pontok hozzáadása az élekhez Alt nélkül</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Szerkesztési módban kattintson egy sokszög vagy töröttvonal élére pont hozzáadásához. Az Alt+kattintás is működik.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

@@ -160,6 +160,10 @@
         <translation>คลิกและลากเพื่อย้ายจุด</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>คลิกเพื่อเพิ่มจุดบนขอบ</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>กด %s ค้างไว้แล้วคลิกเพื่อเพิ่มจุดบนขอบ</translation>
     </message>
@@ -1370,6 +1374,14 @@ Expected location: {path}</source>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>เติมสีหลายเหลี่ยมขณะวาด</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>เพิ่มจุดบนขอบโดยไม่ต้องกด Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>ในโหมดแก้ไข ให้คลิกขอบของรูปหลายเหลี่ยมหรือเส้นหลายท่อนเพื่อเพิ่มจุด หรือใช้ Alt+คลิกได้เช่นกัน</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

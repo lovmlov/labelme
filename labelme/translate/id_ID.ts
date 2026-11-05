@@ -160,6 +160,10 @@
         <translation>Klik &amp; seret untuk memindahkan titik</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Klik untuk menambahkan titik pada tepi</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Tahan %s lalu klik untuk menambahkan titik pada tepi</translation>
     </message>
@@ -1425,6 +1429,14 @@ Lokasi yang diharapkan: {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Isi poligon saat menggambar</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Tambahkan titik pada tepi tanpa Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Dalam mode edit, klik tepi poligon atau garis bersambung untuk menambahkan titik. Alt+klik juga dapat digunakan.</translation>
     </message>
     <message>
         <source>Predefined shape flags</source>

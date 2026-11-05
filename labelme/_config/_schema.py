@@ -182,6 +182,22 @@ SETTINGS: Final[tuple[Setting, ...]] = (
         kind="bool",
     ),
     Setting(
+        key_path=("canvas", "add_point_on_edge_without_alt"),
+        group="Drawing and canvas",
+        label=cast(
+            str, QT_TRANSLATE_NOOP("SettingsDialog", "Add points on edges without Alt")
+        ),
+        kind="bool",
+        note=cast(
+            str,
+            QT_TRANSLATE_NOOP(
+                "SettingsDialog",
+                "In edit mode, click a polygon or line-strip edge to add a point. "
+                "Alt-click also works.",
+            ),
+        ),
+    ),
+    Setting(
         key_path=("canvas", "allow_out_of_bounds_points"),
         group="Drawing and canvas",
         label=cast(

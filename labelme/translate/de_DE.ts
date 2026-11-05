@@ -188,6 +188,10 @@
         <translation>Startpunkt der Linienfolge anklicken</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Klicken, um einen Punkt auf der Kante hinzuzufügen</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>%s gedrückt halten und klicken, um einen Punkt auf der Kante hinzuzufügen</translation>
     </message>
@@ -1369,6 +1373,14 @@ Erwarteter Speicherort: {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Polygon beim Zeichnen füllen</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Punkte auf Kanten ohne Alt hinzufügen</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>Im Bearbeitungsmodus auf eine Polygonkante oder einen Linienzug klicken, um einen Punkt hinzuzufügen. Alt-Klick funktioniert ebenfalls.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>

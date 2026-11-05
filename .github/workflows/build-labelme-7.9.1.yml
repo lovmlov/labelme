@@ -1,34 +1,30 @@
+---
 name: Build Labelme 7.9.1 Windows EXE
-
 on:
   workflow_dispatch:
   push:
-    branches: ['codex/labelme-7.9.1-windows']
-    paths:
-      - 'buildkit/**'
-      - '.github/workflows/build-labelme-7.9.1.yml'
-
+    branches: [codex/labelme-7.9.1-windows]
+    paths: [buildkit/**, .github/workflows/build-labelme-7.9.1.yml]
 permissions:
   contents: read
-
 jobs:
   windows-exe:
     runs-on: windows-2022
     timeout-minutes: 40
     steps:
       - name: Check out build files
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803  # v6
         with:
           persist-credentials: false
       - name: Check out exact upstream source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803  # v6
         with:
           repository: wkentaro/labelme
           ref: d179c2353dcf35a29809797b2702dba8d794b84e
           path: labelme-src
           persist-credentials: false
       - name: Set up Windows Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
         with:
           python-version: '3.12'
           architecture: x64
@@ -36,7 +32,7 @@ jobs:
         shell: pwsh
         run: ./buildkit/build-windows.ps1
       - name: Upload tested EXE
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6
         with:
           name: Labelme-7.9.1-Windows-x64
           path: dist/*
@@ -60,7 +56,7 @@ jobs:
           }
       - name: Upload failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6
         with:
           name: Labelme-7.9.1-build-failure
           path: |

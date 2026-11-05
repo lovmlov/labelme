@@ -1,4 +1,6 @@
-"""Windows portable entry point; application code remains upstream v7.9.1."""
+# ruff: noqa: PLC0415 -- defer imports until startup logging is active
+"""Windows portable entry point; runs the installed customized application."""
+
 from __future__ import annotations
 
 import faulthandler
@@ -35,14 +37,16 @@ def run() -> None:
         traceback.print_exc(file=crash_stream)
         crash_stream.flush()
         try:
-            import ctypes
+            if sys.platform == "win32":
+                import ctypes
 
-            ctypes.windll.user32.MessageBoxW(
-                None,
-                f"Labelme could not start. Details were saved to:\n{log_dir / 'portable-startup.log'}",
-                "Labelme startup error",
-                0x10,
-            )
+                ctypes.windll.user32.MessageBoxW(
+                    None,
+                    "Labelme could not start. Details were saved to:\n"
+                    f"{log_dir / 'portable-startup.log'}",
+                    "Labelme startup error",
+                    0x10,
+                )
         except Exception:
             pass
         raise

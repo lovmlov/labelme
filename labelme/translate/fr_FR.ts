@@ -160,6 +160,10 @@
         <translation>Cliquer et glisser pour déplacer le point</translation>
     </message>
     <message>
+        <source>Click to add a point on the edge</source>
+        <translation>Cliquer pour ajouter un point sur le bord</translation>
+    </message>
+    <message>
         <source>Hold %s and click to add a point on the edge</source>
         <translation>Maintenez %s et cliquez pour ajouter un point sur l&apos;arête</translation>
     </message>
@@ -1369,6 +1373,14 @@ Emplacement attendu : {path}</translation>
     <message>
         <source>Fill polygon while drawing</source>
         <translation>Remplir le polygone pendant le dessin</translation>
+    </message>
+    <message>
+        <source>Add points on edges without Alt</source>
+        <translation>Ajouter des points sur les bords sans Alt</translation>
+    </message>
+    <message>
+        <source>In edit mode, click a polygon or line-strip edge to add a point. Alt-click also works.</source>
+        <translation>En mode édition, cliquez sur le bord d’un polygone ou d’une ligne brisée pour ajouter un point. Alt+clic fonctionne aussi.</translation>
     </message>
     <message>
         <source>Let shape points extend beyond the image, e.g. for partially visible objects.</source>
