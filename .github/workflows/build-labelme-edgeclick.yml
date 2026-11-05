@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: labelme-7.9.1-edgeclick-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   windows-exe:
@@ -94,6 +94,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          latest_sha=$(gh api "repos/$GH_REPO/branches/codex%2Flabelme-7.9.1-edgeclick" --jq '.commit.sha')
+          test "$latest_sha" = "$GITHUB_SHA"
           tag=v7.9.1-edgeclick.1
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Release $tag already exists; refusing to overwrite its assets."

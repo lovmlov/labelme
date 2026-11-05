@@ -9,7 +9,7 @@ import traceback
 from pathlib import Path
 
 
-def run_smoke(report: Path) -> int:
+def run_smoke(report: Path, /) -> int:
     results: dict = {"ok": False, "checks": []}
     report.parent.mkdir(parents=True, exist_ok=True)
     app = None
