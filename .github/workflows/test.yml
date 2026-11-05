@@ -16,6 +16,10 @@ jobs:
   config-migrations:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      # The fork's Windows release tags are not Python version strings.
+      # Match the portable wheel version when fetching the complete tag history.
+      SETUPTOOLS_SCM_PRETEND_VERSION: 7.9.1+layout.1
     steps:
       - uses: actions/checkout@v7
         with:

@@ -10,6 +10,9 @@ on:
       - buildkit/**
       - changelog.d/**
       - .github/workflows/build-labelme-layout.yml
+      - .github/workflows/test.yml
+      - pyproject.toml
+      - uv.lock
 permissions:
   contents: read
 concurrency:
