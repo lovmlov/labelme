@@ -92,12 +92,12 @@ def test_toolbar_overflow_has_accessible_name(
 # --- movable / floatable ---
 
 
-def test_toolbar_is_not_movable(*, toolbar_h: ToolBar) -> None:
-    assert not toolbar_h.isMovable()
+def test_toolbar_is_movable(*, toolbar_h: ToolBar) -> None:
+    assert toolbar_h.isMovable()
 
 
-def test_toolbar_is_not_floatable(*, toolbar_h: ToolBar) -> None:
-    assert not toolbar_h.isFloatable()
+def test_toolbar_is_floatable(*, toolbar_h: ToolBar) -> None:
+    assert toolbar_h.isFloatable()
 
 
 # --- frameless window flag ---

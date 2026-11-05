@@ -27,8 +27,11 @@ def run_smoke(report: Path, /) -> int:
         from labelme._app import MainWindow
         from labelme._locale import available_translation_locales
         from labelme._shape import Shape
+        from labelme._widgets._tool_bar import ToolBar
+        from labelme._widgets._tool_bar_layout import restore_toolbar_actions
+        from labelme._widgets._tool_bar_layout import save_toolbar_actions
 
-        assert labelme.__version__ == "7.9.1+edgeclick.1", labelme.__version__
+        assert labelme.__version__ == "7.9.1+layout.2", labelme.__version__
         results["version"] = labelme.__version__
         results["onnxruntime"] = onnxruntime.__version__
         results["qt"] = QtCore.qVersion()
@@ -47,6 +50,12 @@ def run_smoke(report: Path, /) -> int:
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
         with tempfile.TemporaryDirectory(prefix="labelme-portable-test-") as tmp:
             tmp_path = Path(tmp)
+            QtCore.QSettings.setDefaultFormat(QtCore.QSettings.Format.IniFormat)
+            QtCore.QSettings.setPath(
+                QtCore.QSettings.Format.IniFormat,
+                QtCore.QSettings.Scope.UserScope,
+                str(tmp_path / "settings"),
+            )
             image_path = tmp_path / "sample.png"
             annotation_path = tmp_path / "sample.json"
             sample_size = (320, 240)
@@ -61,6 +70,103 @@ def run_smoke(report: Path, /) -> int:
             assert win._load_file(image_or_label_path=str(image_path))
             app.processEvents()
             results["checks"].append("Qt window and image decoding")
+            tools = win.findChild(ToolBar, "ToolsToolBar")
+            shapes = win.findChild(ToolBar, "CreateShapeToolsToolBar")
+            assert tools is not None and shapes is not None
+            assert tools.isMovable() and tools.isFloatable()
+            assert shapes.isMovable() and shapes.isFloatable()
+            menu = win.menuBar()
+            menu_actions = menu.actions()
+            file_actions = win._menus.file.actions()
+            win.addToolBar(QtCore.Qt.ToolBarArea.BottomToolBarArea, tools)
+            win.addToolBar(QtCore.Qt.ToolBarArea.RightToolBarArea, shapes)
+            app.processEvents()
+            action = win._actions.open_dir
+            position = shapes.actionGeometry(shapes.actions()[0]).topLeft()
+            mime = ToolBar.mime_for_action(action)
+            enter = QtGui.QDragEnterEvent(
+                position,
+                QtCore.Qt.DropAction.MoveAction,
+                mime,
+                QtCore.Qt.MouseButton.LeftButton,
+                QtCore.Qt.KeyboardModifier.NoModifier,
+            )
+            QtWidgets.QApplication.sendEvent(shapes, enter)
+            drop = QtGui.QDropEvent(
+                QtCore.QPointF(position),
+                QtCore.Qt.DropAction.MoveAction,
+                mime,
+                QtCore.Qt.MouseButton.LeftButton,
+                QtCore.Qt.KeyboardModifier.NoModifier,
+            )
+            QtWidgets.QApplication.sendEvent(shapes, drop)
+            assert drop.isAccepted() and shapes.actions()[0] is action
+            assert action not in tools.actions()
+            assert menu.actions() == menu_actions
+            assert menu.parentWidget() is win and menu.pos().y() == 0
+            assert win._menus.file.actions() == file_actions
+            saved_positions = win.saveState()
+            saved_buttons = save_toolbar_actions(toolbars=[tools, shapes])
+            win._reset_layout()
+            restore_toolbar_actions(toolbars=[tools, shapes], state=saved_buttons)
+            assert win.restoreState(saved_positions)
+            assert shapes.actions()[0] is action
+            assert win.toolBarArea(tools) == QtCore.Qt.ToolBarArea.BottomToolBarArea
+            results["checks"].append(
+                "toolbar button rearrangement, saved layout and fixed menu bar"
+            )
+            win._reset_layout()
+            app.processEvents()
+            # Exercise the real Qt handle drag in the frozen program as well.
+            option = QtWidgets.QStyleOptionToolBar()
+            tools.initStyleOption(option)
+            handle = (
+                tools.style()
+                .subElementRect(
+                    QtWidgets.QStyle.SubElement.SE_ToolBarHandle, option, tools
+                )
+                .center()
+            )
+            QtGui.QCursor.setPos(tools.mapToGlobal(handle))
+            press = QtGui.QMouseEvent(
+                QtCore.QEvent.Type.MouseButtonPress,
+                QtCore.QPointF(handle),
+                QtCore.QPointF(tools.mapToGlobal(handle)),
+                QtCore.Qt.MouseButton.LeftButton,
+                QtCore.Qt.MouseButton.LeftButton,
+                QtCore.Qt.KeyboardModifier.NoModifier,
+            )
+            QtWidgets.QApplication.sendEvent(tools, press)
+            destination = win.mapToGlobal(win.rect().center())
+            QtGui.QCursor.setPos(destination)
+            for event_type, button, buttons in [
+                (
+                    QtCore.QEvent.Type.MouseMove,
+                    QtCore.Qt.MouseButton.NoButton,
+                    QtCore.Qt.MouseButton.LeftButton,
+                ),
+                (
+                    QtCore.QEvent.Type.MouseButtonRelease,
+                    QtCore.Qt.MouseButton.LeftButton,
+                    QtCore.Qt.MouseButton.NoButton,
+                ),
+            ]:
+                event = QtGui.QMouseEvent(
+                    event_type,
+                    QtCore.QPointF(tools.mapFromGlobal(destination)),
+                    QtCore.QPointF(destination),
+                    button,
+                    buttons,
+                    QtCore.Qt.KeyboardModifier.NoModifier,
+                )
+                QtWidgets.QApplication.sendEvent(tools, event)
+                app.processEvents()
+            assert tools.isFloating()
+            assert menu.parentWidget() is win and menu.pos().y() == 0
+            win._reset_layout()
+            assert not tools.isFloating()
+            results["checks"].append("native toolbar handle drag, float and reset")
+            app.processEvents()
             shape = Shape(
                 label="portable_test",
                 shape_type="polygon",

@@ -86,6 +86,8 @@ from ._widgets import ZoomWidget
 from ._widgets import format_shape_label
 from ._widgets import license_link
 from ._widgets import license_notice
+from ._widgets._tool_bar_layout import restore_toolbar_actions
+from ._widgets._tool_bar_layout import save_toolbar_actions
 
 
 class _ZoomMode(enum.Enum):
@@ -104,6 +106,7 @@ _AI_CREATE_MODES: Final[tuple[str, ...]] = (
 WINDOW_SIZE_KEY: Final[str] = "window/size"
 WINDOW_POSITION_KEY: Final[str] = "window/position"
 WINDOW_LAYOUT_KEY: Final[str] = "window/state"
+TOOLBAR_ACTIONS_KEY: Final[str] = "window/toolbar-actions"
 # Maps each absolute opened folder to its absolute Annotation Folder.
 ANNOTATION_FOLDERS_KEY: Final[str] = "annotationFolders"
 
@@ -1255,6 +1258,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 QtCore.QByteArray,
                 self._window_state.value(WINDOW_LAYOUT_KEY, QtCore.QByteArray()),
             )
+        )
+        restore_toolbar_actions(
+            toolbars=self.findChildren(ToolBar),
+            state=self._window_state.value(TOOLBAR_ACTIONS_KEY, ""),
         )
         # Recover window position when the saved screen is no longer connected.
         if not any(
@@ -2832,6 +2839,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def _reset_layout(self) -> None:
         self._window_state.remove(WINDOW_LAYOUT_KEY)
+        self._window_state.remove(TOOLBAR_ACTIONS_KEY)
+        restore_toolbar_actions(toolbars=self.findChildren(ToolBar))
         self.restoreState(self._default_state)
 
     def closeEvent(self, a0: QtGui.QCloseEvent, /) -> None:
@@ -2846,6 +2855,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self._window_state.setValue(WINDOW_SIZE_KEY, self.size())
         self._window_state.setValue(WINDOW_POSITION_KEY, self.pos())
         self._window_state.setValue(WINDOW_LAYOUT_KEY, self.saveState())
+        self._window_state.setValue(
+            TOOLBAR_ACTIONS_KEY,
+            save_toolbar_actions(toolbars=self.findChildren(ToolBar)),
+        )
 
     def dragEnterEvent(self, a0: QtGui.QDragEnterEvent, /) -> None:
         # Accepting only drags that carry a loadable image keeps the cursor
