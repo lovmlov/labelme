@@ -1,5 +1,6 @@
 ---
 name: Build and release Labelme 7.9.1 clean-exit Windows EXE
+run-name: Verify and package Labelme 7.9.1+exit.1 for Windows x64
 on:
   workflow_dispatch:
   push:

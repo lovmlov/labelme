@@ -1,5 +1,6 @@
 ---
 name: Diagnose published Labelme exit
+run-name: Check published layout.2 exit on Windows
 on:
   workflow_dispatch:
   push:
