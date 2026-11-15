@@ -7,15 +7,19 @@ import ctypes
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import time
 from ctypes import wintypes
 from pathlib import Path
+from typing import Final
 
 import psutil
 
 
 def _windows(*, pids: set[int]) -> list[dict]:
+    if sys.platform != "win32":
+        raise RuntimeError("Native window enumeration requires Windows.")
     user32 = ctypes.WinDLL("user32", use_last_error=True)
     callback_type = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
     result: list[dict] = []
@@ -140,11 +144,13 @@ def verify(
     floating: bool,
     timeout: float,
 ) -> bool:
-    assert os.name == "nt", "This native WM_CLOSE test must run on Windows."
+    if sys.platform != "win32":
+        raise RuntimeError("This native WM_CLOSE test must run on Windows.")
     _profile(floating=floating)
     outcome: dict = {"ok": False, "profile": "floating" if floating else "default"}
     tracked: dict[int, psutil.Process] = {}
     process = None
+    STARTUP_TIMEOUT: Final = 60
     start = time.monotonic()
     with tempfile.TemporaryDirectory(prefix="labelme-exit-") as temporary:
         env = dict(os.environ, LOCALAPPDATA=temporary)
@@ -155,7 +161,7 @@ def verify(
             process = subprocess.Popen(command, env=env)
             tracked[process.pid] = psutil.Process(process.pid)
             hwnd = None
-            while time.monotonic() - start < 60:
+            while time.monotonic() - start < STARTUP_TIMEOUT:
                 for current in list(tracked.values()):
                     try:
                         for child in current.children(recursive=True):
@@ -174,7 +180,8 @@ def verify(
                     break
                 if process.poll() is not None:
                     raise RuntimeError(
-                        f"Application exited before its main window: {process.returncode}"
+                        "Application exited before its main window: "
+                        f"{process.returncode}"
                     )
                 time.sleep(0.1)
             if hwnd is None:
@@ -222,6 +229,8 @@ def verify(
             for current in reversed(list(tracked.values())):
                 if _alive(current):
                     current.kill()
+            if process is not None:
+                process.wait(timeout=5)
             psutil.wait_procs(list(tracked.values()), timeout=5)
             logs = Path(temporary) / "labelme"
             outcome["logs"] = {

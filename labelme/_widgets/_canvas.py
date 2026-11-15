@@ -511,6 +511,13 @@ class Canvas(QtWidgets.QWidget):
     def get_ai_model_name(self) -> str:
         return self._ai_assist_session.model_name
 
+    def shutdown(self) -> None:
+        # Stop preview callbacks and release the model while Qt is still alive.
+        self._ai_preview_timer.stop()
+        self._ai_points_preview = []
+        self._ai_points_preview_key = None
+        self.set_ai_model_name(model_name="")
+
     def set_ai_model_name(self, *, model_name: str) -> None:
         if self._ai_assist_session.model_name == model_name:
             return
