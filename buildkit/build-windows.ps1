@@ -57,6 +57,7 @@ try {
         "$TaskRoot\tests\unit\widgets\_canvas_test.py" `
         "$TaskRoot\tests\unit\widgets\_canvas_interaction" `
         "$TaskRoot\tests\unit\_config" `
+        "--basetemp=$TaskRoot\build\pytest" `
         "--junitxml=$TaskRoot\dist\windows-tests.xml"
 } finally {
     Remove-Item Env:QT_QPA_PLATFORM -ErrorAction SilentlyContinue

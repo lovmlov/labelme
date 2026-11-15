@@ -64,6 +64,10 @@ jobs:
           path: |
             build/**/warn-*.txt
             build/exit-tests/**
+            build/pytest/**/result.json
+            build/pytest/**/lifecycle.json
+            build/pytest/**/console.log
+            build/pytest/**/portable-startup.log
             dist/*.json
             dist/*.xml
             diagnostics/**

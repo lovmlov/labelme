@@ -141,6 +141,13 @@ def verify_exit(
             result["error"] = f"{type(error).__name__}: {error}"
             result["lifecycle"] = records
             result["remaining_pids"] = [p.pid for p in tracked.values() if _alive(p)]
+            result["startup_logs"] = {
+                p.name: p.read_text(encoding="utf-8", errors="replace")[-16000:]
+                for p in (home / "labelme").glob("*.log")
+            }
+            result["console"] = (directory / "console.log").read_text(
+                encoding="utf-8", errors="replace"
+            )[-16000:]
         finally:
             # Kill only this failed test's own process family, after recording
             # failure. Production shutdown must never depend on the harness.

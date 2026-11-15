@@ -156,7 +156,6 @@ def install_probe(*, report: Path, scenario: str) -> Callable[[], None]:
                     return
             record("ready_to_close")
             self.close()
-            QtCore.QTimer.singleShot(250, lambda: record("event_loop_still_running"))
 
         def closeEvent(self, event: QtGui.QCloseEvent, /) -> None:
             super().closeEvent(event)

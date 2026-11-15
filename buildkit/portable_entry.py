@@ -49,6 +49,7 @@ def run() -> None:
         if exit_report := os.environ.get("LABELME_PORTABLE_EXIT_REPORT"):
             from portable_exit_probe import install_probe
 
+            faulthandler.dump_traceback_later(10, repeat=True, file=crash_stream)
             finish_probe = install_probe(
                 report=Path(exit_report),
                 scenario=os.environ.get("LABELME_PORTABLE_EXIT_SCENARIO", "plain"),

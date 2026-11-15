@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -21,4 +22,4 @@ def test_real_entrypoint_releases_process_after_close(
         directory=tmp_path / scenario,
         image=root / "tests/data/raw/2011_000003.jpg",
     )
-    assert result["ok"], result
+    assert result["ok"], json.dumps(result, indent=2)
