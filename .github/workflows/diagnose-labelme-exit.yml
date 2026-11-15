@@ -9,6 +9,9 @@ on:
       - buildkit/verify_windows_exit.py
 permissions:
   contents: read
+concurrency:
+  group: diagnose-labelme-exit
+  cancel-in-progress: true
 jobs:
   published-exe:
     runs-on: windows-2022
