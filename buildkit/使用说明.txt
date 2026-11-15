@@ -1,6 +1,6 @@
-Labelme 7.9.1+layout.2 Windows x64 独立程序
+Labelme 7.9.1+exit.1 Windows x64 独立程序
 
-运行：双击 Labelme-7.9.1-layout.2-Windows-x64.exe，无需安装 Python。
+运行：双击 Labelme-7.9.1-exit.1-Windows-x64.exe，无需安装 Python。
 目标：Windows 10 / 11，64 位。首次启动需要解压内置依赖到临时目录，请稍候。
 人工标注无需下载 AI 模型；AI 辅助功能首次使用相应模型时仍需下载权重。
 
@@ -17,7 +17,7 @@ Labelme 7.9.1+layout.2 Windows x64 独立程序
 %LOCALAPPDATA%\labelme\portable-startup.log
 
 源码：基于 wkentaro/labelme v7.9.1 修改，增加边缘单击加点及可持久化的设置开关。
-https://github.com/lovmlov/labelme/tree/codex/labelme-7.9.1-layout
+https://github.com/lovmlov/labelme/tree/codex/labelme-7.9.1-exit
 本包的精确源码提交号见 source-commit.txt；GPL-3.0 许可证见 LICENSE-GPL-3.0.txt。
 详细改动见 改动说明.md。回归结果见 windows-tests.xml，EXE 自检见 smoke-test.json。
 这不是官方发布或官方签名的 Windows 程序。
@@ -28,3 +28,8 @@ https://github.com/lovmlov/labelme/tree/codex/labelme-7.9.1-layout
 文件/编辑/视图/帮助菜单栏固定在顶部。
 布局随程序关闭保存，重新启动后恢复。
 视图 -> 重置布局：恢复默认工具栏位置和按钮顺序。
+
+退出清理：
+关闭主窗口并确认保存或放弃修改后，结束事件循环，停止预览定时器并释放已缓存的 AI 会话，刷完日志后关闭日志线程。
+取消关闭时继续使用当前窗口。Windows 子进程由操作系统绑定到主进程生命周期。
+完整退出验证见 exit-test.json 和 native-exit-*.json；此报告由构建流程生成，不依赖测试程序强制结束进程。

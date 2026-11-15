@@ -51,11 +51,12 @@ class _LoggerIO(io.StringIO):
         return False
 
 
-def _setup_loguru(*, logger_level: str) -> None:
+def _setup_loguru(*, logger_level: str) -> list[int]:
     logger.remove()
+    owned_sinks: list[int] = []
 
     if sys.stderr:
-        logger.add(sys.stderr, level=logger_level)
+        owned_sinks.append(logger.add(sys.stderr, level=logger_level))
 
     # The log file is best-effort: a read-only or otherwise restricted home must
     # not stop labelme from starting, since the stderr sink above already keeps
@@ -69,16 +70,18 @@ def _setup_loguru(*, logger_level: str) -> None:
         cache_dir.mkdir(parents=True, exist_ok=True)
 
         log_file = cache_dir / "labelme.log"
-        logger.add(
-            log_file,
-            colorize=True,
-            level="DEBUG",
-            rotation="10 MB",
-            retention="30 days",
-            compression="gz",
-            enqueue=True,
-            backtrace=True,
-            diagnose=True,
+        owned_sinks.append(
+            logger.add(
+                log_file,
+                colorize=True,
+                level="DEBUG",
+                rotation="10 MB",
+                retention="30 days",
+                compression="gz",
+                enqueue=True,
+                backtrace=True,
+                diagnose=True,
+            )
         )
     except Exception as e:
         # Broad like _config.get_user_config_file: Path.expanduser alone raises
@@ -90,9 +93,10 @@ def _setup_loguru(*, logger_level: str) -> None:
             type(e).__name__,
             e,
         )
+    return owned_sinks
 
 
-def _route_qt_logging_to_loguru() -> None:
+def _route_qt_logging_to_loguru() -> object:
     # Qt logs through its own handler straight to the C stderr, bypassing loguru
     # and the log file. Route it through loguru instead, dropping two harmless
     # noise sources so genuine Qt warnings still surface. The macOS keymapper
@@ -129,7 +133,7 @@ def _route_qt_logging_to_loguru() -> None:
             # line explaining the crash reaches the log file.
             logger.complete()
 
-    QtCore.qInstallMessageHandler(handler)
+    return QtCore.qInstallMessageHandler(handler)
 
 
 def _handle_exception(
@@ -333,8 +337,8 @@ def main() -> None:
         print(f"{__appname__} {__version__}")
         sys.exit(0)
 
-    _setup_loguru(logger_level=args.logger_level.upper())
-    _route_qt_logging_to_loguru()
+    owned_sinks = _setup_loguru(logger_level=args.logger_level.upper())
+    previous_qt_handler = _route_qt_logging_to_loguru()
     logger.info("Starting {} {}", __appname__, __version__)
 
     sys.excepthook = _handle_exception
@@ -433,10 +437,24 @@ def main() -> None:
         win._window_state.clear()
         sys.exit(0)
 
-    with contextlib.redirect_stderr(new_target=_LoggerIO()):
-        win.show()
-        win.raise_()
-        sys.exit(app.exec())
+    # Closing the primary window must end this application's event loop even
+    # when a floating/auxiliary top-level window remains. Preserve cancellation
+    # and the save/download barriers: the signal is emitted only after cleanup.
+    win.close_accepted.connect(app.quit, QtCore.Qt.ConnectionType.QueuedConnection)
+    try:
+        with contextlib.redirect_stderr(new_target=_LoggerIO()):
+            win.show()
+            win.raise_()
+            exit_code = app.exec()
+    finally:
+        # Drain and stop the file writer while Python and Qt are still intact,
+        # rather than leaving queued logging to interpreter/Qt finalization.
+        QtCore.qInstallMessageHandler(previous_qt_handler)
+        if owned_sinks:
+            logger.complete()
+            for sink_id in owned_sinks:
+                logger.remove(sink_id)
+    sys.exit(exit_code)
 
 
 # this main block is required to generate executable by pyinstaller

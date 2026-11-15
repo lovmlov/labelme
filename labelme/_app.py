@@ -234,6 +234,7 @@ def _try_load_config(
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    close_accepted = QtCore.Signal()
     _config_file: Path | None
     _config: dict
     _config_overrides: dict
@@ -2859,6 +2860,11 @@ class MainWindow(QtWidgets.QMainWindow):
             TOOLBAR_ACTIONS_KEY,
             save_toolbar_actions(toolbars=self.findChildren(ToolBar)),
         )
+        self._canvas_widgets.canvas.shutdown()
+        self._text_osam_session = None
+        self._fit_selection_timer.stop()
+        a0.accept()
+        self.close_accepted.emit()
 
     def dragEnterEvent(self, a0: QtGui.QDragEnterEvent, /) -> None:
         # Accepting only drags that carry a loadable image keeps the cursor
