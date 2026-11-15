@@ -38,6 +38,7 @@ if (-not $SkipInstall) {
 Invoke-Python -m pip check
 Invoke-Python -c 'import labelme; assert labelme.__version__ == "7.9.1+exit.1", labelme.__version__'
 New-Item -ItemType Directory -Force -Path "$TaskRoot\dist" | Out-Null
+New-Item -ItemType Directory -Force -Path "$TaskRoot\build" | Out-Null
 $env:QT_QPA_PLATFORM = 'offscreen'
 try {
     Invoke-Python -m pytest -q `
